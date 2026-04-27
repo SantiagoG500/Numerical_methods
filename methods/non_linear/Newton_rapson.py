@@ -1,55 +1,80 @@
 import sympy as sp
+from sympy.parsing.sympy_parser import parse_expr, standard_transformations, implicit_multiplication_application, convert_xor
 
-def newton_raphson(funcion_str, x0, tolerancia, max_iteraciones):
-    # Definimos la variable simbólica
-    x = sp.symbols('x')
-    
-    # Convertimos el string de la función a una expresión de sympy
-    f = sp.sympify(funcion_str)
-    
-    # Calculamos la derivada automáticamente
-    df = sp.diff(f, x)
-    
-    # Convertimos las expresiones en funciones numéricas rápidas (lambdify)
-    f_num = sp.lambdify(x, f)
-    df_num = sp.lambdify(x, df)
-    
-    print(f"{'Iteración':<12} | {'xn':<15} | {'f(xn)':<15} | {'Error':<15}")
-    print("-" * 65)
-    
-    xn = x0
-    for i in range(max_iteraciones):
-        fxn = f_num(xn)
-        dfxn = df_num(xn)
-        
-        # Evitar división por cero
-        if abs(dfxn) < 1e-15:
-            print("Error: La derivada es demasiado cercana a cero. El método no puede continuar.")
-            return None
-        
-        # Fórmula de Newton-Raphson: x_{n+1} = x_n - f(x_n) / f'(x_n)
-        x_siguiente = xn - fxn / dfxn
-        error = abs(x_siguiente - xn)
-        
-        print(f"{i+1:<12} | {xn:<15.8f} | {fxn:<15.8e} | {error:<15.8e}")
-        
-        # Verificamos si alcanzamos la precisión deseada
-        if error < tolerancia:
-            print("-" * 65)
-            print(f"Raíz encontrada: {x_siguiente:.10f} con un error de {error:.10e}")
-            return x_siguiente
-        
-        xn = x_siguiente
-        
-    print("-" * 65)
-    print("Se alcanzó el máximo de iteraciones sin llegar a la tolerancia.")
-    return xn
+# Configuración para permitir sintaxis flexible (ej: 2x, x^2)
+transformaciones = (standard_transformations + (implicit_multiplication_application, convert_xor))
 
-# --- Configuración del ejercicio ---
-# Ejemplo: f(x) = x^2 - 2 (para encontrar raíz de 2)
-funcion_usuario = "x**3 - 4*x - 9"
-valor_inicial = 3.0
-precision = 1e-5
-maximo_pasos = 30
+def newton_raphson_interactivo():
+    print("========================================")
+    print("   MÉTODO DE NEWTON-RAPHSON (V2)")
+    print("========================================\n")
 
-newton_raphson(funcion_usuario, valor_inicial, precision, maximo_pasos)
+    try:
+        # --- ENTRADAS INTERACTIVAS ---
+        fx_str = input("Ingrese la función f(x): ")
+        x0 = float(input("Ingrese el valor inicial (x0): "))
+        tolerancia = float(input("Ingrese el error relativo permitido: "))
+        max_iter = int(input("Ingrese el máximo de iteraciones: "))
+
+        # --- PREPARACIÓN SIMBÓLICA ---
+        x = sp.symbols('x')
+        expresion = parse_expr(fx_str, transformations=transformaciones)
+        
+        # Derivada automática
+        derivada_expr = sp.diff(expresion, x)
+        
+        # Convertir a funciones numéricas para mayor velocidad
+        f = sp.lambdify(x, expresion)
+        df = sp.lambdify(x, derivada_expr)
+
+        print("\n--- INICIO DEL PROCESO ---")
+        print(f"{'Iter':<5} | {'xn':<12} | {'f(xn)':<12} | {'Error Rel.':<12}")
+        print("-" * 55)
+
+        xn = x0
+        iteracion = 0
+
+        while True:
+            iteracion += 1
+            
+            val_f = f(xn)
+            val_df = df(xn)
+
+            # Evitar división por cero (derivada nula)
+            if abs(val_df) < 1e-15:
+                print(f"Error: La derivada en {xn} es cero. El método no puede continuar.")
+                break
+
+            # Fórmula de Newton-Raphson
+            x_siguiente = xn - (val_f / val_df)
+            
+            # Cálculo del error relativo
+            if x_siguiente != 0:
+                error_rel = abs((x_siguiente - xn) / x_siguiente)
+            else:
+                error_rel = abs(x_siguiente - xn)
+
+            print(f"{iteracion:<5} | {xn:<12.6f} | {val_f:<12.2e} | {error_rel:<12.6f}")
+
+            # --- CRITERIOS DE PARADA ---
+            if error_rel < tolerancia:
+                print("-" * 55)
+                print(f"[✓] Convergencia alcanzada.")
+                print(f"Resultado final (Raíz): {x_siguiente}")
+                break
+
+            if iteracion >= max_iter:
+                print("-" * 55)
+                print(f"[!] Se alcanzó el límite de {max_iter} iteraciones.")
+                print(f"Última aproximación: {x_siguiente}")
+                break
+
+            # Actualización para la siguiente vuelta
+            xn = x_siguiente
+
+    except Exception as e:
+        print(f"\n[!] Error en los datos: {e}")
+        print("Asegúrese de usar una función válida.")
+
+if __name__ == "__main__":
+    newton_raphson_interactivo()
