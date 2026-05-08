@@ -14,28 +14,65 @@ This repository contains Python scripts for numerical analysis, focused on itera
 - `Secante.py`: Implements the secant method for solving equations of the form `f(x) = 0`.
 - `utils.py`: Contains helper functions and a fixed-point iteration implementation that can be used as a library inside other scripts.
 
+### Prerequisites
+
+* **Python 3.9** or higher.
+* **pip** (Python package installer).
+
 ## How to Run
 
-This project uses a Python virtual environment located in `.venv`.
+Follow these instructions to get a copy of the project up and running on your local machine.
 
-From the project folder, run one of the scripts with the environment Python executable:
+### Installation & Setup
 
-```powershell
-.c/.venv/Scripts/python.exe punto_fijo.py
+1. **Clone the repository:**
+
+    ```bash
+    git clone [https://github.com/your-username/numeric_methods.git](https://github.com/your-username/numeric_methods.git)
+    cd numeric_methods
+    ```
+
+2. **Create a virtual environment:**
+
+* **Windows:**
+    ```powershell
+        python -m venv .venv
+    ```
+
+* **macOS/Linux:**
+    ```bash
+    python3 -m venv .venv
+    ```
+
+
+3. **Activate the environment:**
+* **Windows (PowerShell):**
+    ```powershell
+    .\.venv\Scripts\Activate.ps1
+    ```
+
+* **macOS/Linux:**
+    ```bash
+    source .venv/bin/activate
+    ```
+
+4. **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+
+
+## 🛠️ Usage
+
+Once the dependencies are installed, you can launch the interactive interface by running:
+
+```bash
+python app.py
 ```
 
-or
+After running the command, open your browser and navigate to the local URL provided in the terminal (usually `http://127.0.0.1:7860`).
 
-```powershell
-.c/.venv/Scripts/python.exe Secante.py
-```
-
-If your terminal is already in the repository folder, the commands are:
-
-```powershell
-c:/Users/santi/OneDrive/Documentos/repos/numeric_methods/.venv/Scripts/python.exe punto_fijo.py
-c:/Users/santi/OneDrive/Documentos/repos/numeric_methods/.venv/Scripts/python.exe Secante.py
-```
 
 ## Example Inputs
 
@@ -52,16 +89,6 @@ For `Secante.py`:
 - Relative error: `1e-6`
 - Max iterations: `100`
 
-## Requirements
-
-- Python 3.14
-- SymPy library
-
-The virtual environment should already contain the required packages. If needed, install SymPy with:
-
-```powershell
-.c/.venv/Scripts/python.exe -m pip install sympy
-```
 
 ## Notes
 
