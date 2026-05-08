@@ -4,18 +4,8 @@ from sympy.parsing.sympy_parser import parse_expr, standard_transformations, imp
 # Configuración para permitir sintaxis flexible (ej: 2x, x^2)
 transformaciones = (standard_transformations + (implicit_multiplication_application, convert_xor))
 
-def newton_raphson_interactivo():
-    print("========================================")
-    print("   MÉTODO DE NEWTON-RAPHSON (V2)")
-    print("========================================\n")
-
+def newton_raphson_metodo(fx_str, x0, tolerancia, max_iter):
     try:
-        # --- ENTRADAS INTERACTIVAS ---
-        fx_str = input("Ingrese la función f(x): ")
-        x0 = float(input("Ingrese el valor inicial (x0): "))
-        tolerancia = float(input("Ingrese el error relativo permitido: "))
-        max_iter = int(input("Ingrese el máximo de iteraciones: "))
-
         # --- PREPARACIÓN SIMBÓLICA ---
         x = sp.symbols('x')
         expresion = parse_expr(fx_str, transformations=transformaciones)
@@ -27,23 +17,16 @@ def newton_raphson_interactivo():
         f = sp.lambdify(x, expresion)
         df = sp.lambdify(x, derivada_expr)
 
-        print("\n--- INICIO DEL PROCESO ---")
-        print(f"{'Iter':<5} | {'xn':<12} | {'f(xn)':<12} | {'Error Rel.':<12}")
-        print("-" * 55)
-
+        resultados = []
         xn = x0
-        iteracion = 0
 
-        while True:
-            iteracion += 1
-            
+        for iteracion in range(1, max_iter + 1):
             val_f = f(xn)
             val_df = df(xn)
 
             # Evitar división por cero (derivada nula)
             if abs(val_df) < 1e-15:
-                print(f"Error: La derivada en {xn} es cero. El método no puede continuar.")
-                break
+                return f"Error: La derivada en {xn} es cero. El método no puede continuar.", []
 
             # Fórmula de Newton-Raphson
             x_siguiente = xn - (val_f / val_df)
@@ -54,27 +37,15 @@ def newton_raphson_interactivo():
             else:
                 error_rel = abs(x_siguiente - xn)
 
-            print(f"{iteracion:<5} | {xn:<12.6f} | {val_f:<12.2e} | {error_rel:<12.6f}")
+            resultados.append((iteracion, xn, val_f, error_rel))
 
             # --- CRITERIOS DE PARADA ---
             if error_rel < tolerancia:
-                print("-" * 55)
-                print(f"[✓] Convergencia alcanzada.")
-                print(f"Resultado final (Raíz): {x_siguiente}")
-                break
+                return f"Convergencia alcanzada. Raíz: {x_siguiente}", resultados
 
-            if iteracion >= max_iter:
-                print("-" * 55)
-                print(f"[!] Se alcanzó el límite de {max_iter} iteraciones.")
-                print(f"Última aproximación: {x_siguiente}")
-                break
-
-            # Actualización para la siguiente vuelta
             xn = x_siguiente
 
-    except Exception as e:
-        print(f"\n[!] Error en los datos: {e}")
-        print("Asegúrese de usar una función válida.")
+        return f"Se alcanzó el límite de {max_iter} iteraciones. Última aproximación: {xn}", resultados
 
-if __name__ == "__main__":
-    newton_raphson_interactivo()
+    except Exception as e:
+        return f"Error en los datos: {e}. Asegúrese de usar una función válida.", []

@@ -5,81 +5,49 @@ from sympy.parsing.sympy_parser import parse_expr, standard_transformations, imp
 # Configuración para permitir sintaxis flexible (ej: 2x, x^2)
 transformaciones = (standard_transformations + (implicit_multiplication_application, convert_xor))
 
-def biseccion_interactivo():
-    print("========================================")
-    print("   MÉTODO DE BISECCIÓN (V2)")
-    print("========================================\n")
+def biseccion_metodo(f, a, b, tol, max_iter):
+    x = sp.symbols('x')
+    expresion = parse_expr(f, transformations=transformaciones)
 
-    try:
-        # --- ENTRADAS INTERACTIVAS ---
-        fx_str    = input("Ingrese la función f(x): ")
-        a         = float(input("Ingrese el extremo izquierdo del intervalo (a): "))
-        b         = float(input("Ingrese el extremo derecho del intervalo (b): "))
-        tolerancia = float(input("Ingrese el error relativo permitido: "))
-        max_iter  = int(input("Ingrese el máximo de iteraciones: "))
+    f = sp.lambdify(x, expresion)
 
-        # --- PREPARACIÓN SIMBÓLICA ---
-        x = sp.symbols('x')
-        expresion = parse_expr(fx_str, transformations=transformaciones)
+    iteracion = 0
+    c_prev = None
+    
+    if f(a) * f(b) >= 0:
+        raise ValueError("f(a)·f(b) debe ser < 0. El intervalo no contiene una raíz.")
 
-        # Convertir a función numérica para mayor velocidad
-        f = sp.lambdify(x, expresion)
 
-        # --- VALIDACIÓN DEL INTERVALO ---
-        fa, fb = f(a), f(b)
-        if fa * fb >= 0:
-            print(f"\n[!] Error: f(a)·f(b) debe ser < 0.")
-            print(f"    f({a}) = {fa:.6f}   f({b}) = {fb:.6f}")
-            print("    Verifique que el intervalo contenga una raíz.")
-            return
+    fa, fb = f(a), f(b)
 
-        print("\n--- INICIO DEL PROCESO ---")
-        print(f"{'Iter':<5} | {'a':<12} | {'b':<12} | {'c (raíz)':<14} | {'f(c)':<12} | {'Error Rel.':<12}")
-        print("-" * 78)
+    if fa * fb >= 0:
+        return "Error: f(a)·f(b) debe ser < 0. Verifique el intervalo."
 
-        c_prev    = None
-        iteracion = 0
+    resultados = []
 
-        while True:
-            iteracion += 1
+    while iteracion < max_iter:
+        iteracion += 1
+        c = (a + b) / 2.0
+        fc = f(c)
 
-            c  = (a + b) / 2.0
-            fc = f(c)
+        if c_prev is not None:
+            error_rel = abs((c - c_prev) / c) if c != 0 else abs(c - c_prev)
+        else:
+            error_rel = abs(b - a)
 
-            # Cálculo del error relativo
-            if c_prev is not None:
-                if c != 0:
-                    error_rel = abs((c - c_prev) / c)
-                else:
-                    error_rel = abs(c - c_prev)
-            else:
-                error_rel = abs(b - a)          # primera iteración: ancho del intervalo
+        resultados.append((iteracion, a, b, c, fc, error_rel))
 
-            print(f"{iteracion:<5} | {a:<12.6f} | {b:<12.6f} | {c:<14.8f} | {fc:<12.2e} | {error_rel:<12.6f}")
+        if f(a) * fc < 0:
+            b = c
+        else:
+            a = c
 
-            # --- CRITERIOS DE PARADA ---
-            if error_rel < tolerancia:
-                print("-" * 78)
-                print(f"[✓] Convergencia alcanzada.")
-                print(f"Resultado final (Raíz): {c}")
-                break
+        c_prev = c
 
-            if iteracion >= max_iter:
-                print("-" * 78)
-                print(f"[!] Se alcanzó el límite de {max_iter} iteraciones.")
-                print(f"Última aproximación: {c}")
-                break
+    print("Límite de iteraciones alcanzado.")
+    raiz_final = (a + b) / 2.0
 
-            # Actualización del intervalo
-            c_prev = c
-            if f(a) * fc < 0:
-                b = c
-            else:
-                a = c
-
-    except Exception as e:
-        print(f"\n[!] Error en los datos: {e}")
-        print("Asegúrese de usar una función válida.")
-
-if __name__ == "__main__":
-    biseccion_interactivo()
+    if error_rel < tol:
+        return f"Convergencia alcanzada, raíz: {raiz_final}", resultados
+    else:
+        return f"Final de iteraciones alcanzado, raíz aproximada: {raiz_final}", resultados
