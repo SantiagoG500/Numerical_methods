@@ -2,6 +2,12 @@
 
 This repository contains Python scripts for numerical analysis, focused on iterative root-finding and fixed-point methods. It is built for a numeric analysis class and includes interactive examples that let you enter equations and see step-by-step convergence.
 
+## Project Members
+
+- Esteban Bejarano
+- Santiago Gamboa
+- Victor Molina
+
 ## Project Overview
 
 - `punto_fijo.py`: Implements the fixed-point iteration method. It asks for a function `g(x)`, an initial guess `x0`, a tolerance, and a maximum number of iterations.
