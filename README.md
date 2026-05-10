@@ -63,7 +63,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 
 
-## 🛠️ Usage
+## Usage
 
 Once the dependencies are installed, you can launch the interactive interface by running:
 
