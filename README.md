@@ -1,3 +1,12 @@
+---
+title: Numerical Methods
+sdk: gradio # o streamlit, o docker
+sdk_version: 4.0.0
+app_file: app.py
+pinned: false
+---
+
+
 # Numeric Methods
 
 This repository contains Python scripts for numerical analysis, focused on iterative root-finding and fixed-point methods. It is built for a numeric analysis class and includes interactive examples that let you enter equations and see step-by-step convergence.
