@@ -8,6 +8,11 @@ def newton_raphson_metodo(fx_str, x0, tolerancia, max_iter):
     try:
         # --- PREPARACIÓN SIMBÓLICA ---
         x = sp.symbols('x')
+
+        if '=' in f:
+            return "Error: ingresa la función como expresión, no como ecuación. Ej: 'x-3' en vez de 'x=3'", []
+    
+
         expresion = parse_expr(fx_str, transformations=transformaciones)
         
         # Derivada automática
@@ -37,7 +42,7 @@ def newton_raphson_metodo(fx_str, x0, tolerancia, max_iter):
             else:
                 error_rel = abs(x_siguiente - xn)
 
-            resultados.append((iteracion, xn, val_f, error_rel))
+            resultados.append((iteracion, xn, val_f, val_df, error_rel))
 
             # --- CRITERIOS DE PARADA ---
             if error_rel < tolerancia:

@@ -76,7 +76,7 @@ with gr.Blocks(title="Calculadora de métodos numéricos") as demo:
             run_newton = gr.Button("Calcular Newton-Raphson")
         with gr.Column():
             res_output = gr.Textbox(label="Resultados", interactive=False)
-            table_output = gr.Dataframe(headers=["Iteración", "xn", "f(xn)", "Error Relativo"], interactive=False)
+            table_output = gr.Dataframe(headers=["Iteración", "xn", "f(xn)", "f'(xn)", "Error Relativo"], interactive=False)
 
         run_newton.click(
             newton_raphson_metodo,
