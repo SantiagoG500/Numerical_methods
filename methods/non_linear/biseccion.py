@@ -7,15 +7,20 @@ transformaciones = (standard_transformations + (implicit_multiplication_applicat
 
 def biseccion_metodo(f, a, b, tol, max_iter):
     x = sp.symbols('x')
+    
+    if '=' in f:
+        return "Error: ingresa la función como expresión, no como ecuación. Ej: 'x-3' en vez de 'x=3'", []
+    
+
     expresion = parse_expr(f, transformations=transformaciones)
 
     f = sp.lambdify(x, expresion)
 
     iteracion = 0
     c_prev = None
-    
+
     if f(a) * f(b) >= 0:
-        raise ValueError("f(a)·f(b) debe ser < 0. El intervalo no contiene una raíz.")
+        return "f(a)·f(b) debe ser < 0. El intervalo no contiene una raíz."
 
 
     fa, fb = f(a), f(b)
@@ -30,10 +35,17 @@ def biseccion_metodo(f, a, b, tol, max_iter):
         c = (a + b) / 2.0
         fc = f(c)
 
+        # Stop iteration when the root is found
+        if fc == 0:
+            return f"Raíz exacta encontrada: {c}", resultados
+
         if c_prev is not None:
             error_rel = abs((c - c_prev) / c) if c != 0 else abs(c - c_prev)
         else:
             error_rel = abs(b - a)
+
+        if error_rel < tol:
+            return f"Convergencia alcanzada, raíz: {c}", resultados
 
         resultados.append((iteracion, a, b, c, fc, error_rel))
 
