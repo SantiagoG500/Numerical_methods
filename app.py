@@ -15,12 +15,10 @@ def update_matrix_inputs(n):
         gr.update(
             headers=headers_a, 
             row_count=n, 
-            column_count=n, 
-            value=[[0]*n for _ in range(n)] # Opcional: resetea a ceros para evitar conflictos
+            value=[[0]*n for _ in range(n)]
         ),
         gr.update(
             row_count=n, 
-            column_count=1, 
             value=[[0] for _ in range(n)]
         )
     ]
@@ -126,8 +124,8 @@ with gr.Blocks(title="Calculadora de métodos numéricos") as demo:
     with gr.Tab('Gauss-Seidel'):
         with gr.Column():
             gauss_d_input = gr.Slider(label="Dimensión del sistema", minimum=2, maximum=10, step=1, value=3)
-            gauss_a_input = gr.Dataframe(label="Matriz A", headers=["A[1]", "A[2]", "A[3]"], row_count=3, column_count=3, datatype="number", interactive=True, type="array")
-            gauss_b_input = gr.Dataframe(label="Vector b", headers=["b"], row_count=3, column_count=1, datatype="number", interactive=True, type="array")
+            gauss_a_input = gr.Dataframe(label="Matriz A", headers=["A[1]", "A[2]", "A[3]"], row_count=3, datatype="number", interactive=True, type="array")
+            gauss_b_input = gr.Dataframe(label="Vector b", headers=["b"], row_count=3, datatype="number", interactive=True, type="array")
             gauss_tol_input = gr.Number(label="Tolerancia", value=1e-6, precision=10)
             gauss_iter_input = gr.Number(label="Máximo de iteraciones", value=100, precision=0)
 
@@ -152,8 +150,8 @@ with gr.Blocks(title="Calculadora de métodos numéricos") as demo:
     with gr.Tab('Jacobi'):
         with gr.Column():
             jacobi_d_input = gr.Slider(label="Dimensión del sistema", minimum=2, maximum=10, step=1, value=3)
-            jacobi_a_input = gr.Dataframe(label="Matriz A", headers=["A[1]", "A[2]", "A[3]"], row_count=3, column_count=3, datatype="number", interactive=True, type="array")
-            jacobi_b_input = gr.Dataframe(label="Vector b", headers=["b"], row_count=3, column_count=1, datatype="number", interactive=True, type="array")
+            jacobi_a_input = gr.Dataframe(label="Matriz A", headers=["A[1]", "A[2]", "A[3]"], row_count=3, datatype="number", interactive=True, type="array")
+            jacobi_b_input = gr.Dataframe(label="Vector b", headers=["b"], row_count=3, datatype="number", interactive=True, type="array")
             jacobi_tol_input = gr.Number(label="Tolerancia", value=1e-6, precision=10)
             jacobi_iter_input = gr.Number(label="Máximo de iteraciones", value=100, precision=0)
 
