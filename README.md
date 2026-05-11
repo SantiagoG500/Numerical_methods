@@ -1,4 +1,4 @@
-    ---
+---
 title: Numerical Methods Calculator
 colorFrom: blue
 colorTo: indigo
