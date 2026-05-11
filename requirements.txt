@@ -1,2 +1,4 @@
 numpy
 sympy
+huggingface-hub==0.19.4
+gradio==4.44.1
