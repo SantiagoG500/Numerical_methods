@@ -3,7 +3,7 @@ title: Numerical Methods Calculator
 colorFrom: blue
 colorTo: indigo
 sdk: gradio
-python_version: 3.10
+python_version: "3.10"
 sdk_version: 5.0.0
 app_file: app.py
 pinned: false
