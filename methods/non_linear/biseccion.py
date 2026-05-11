@@ -10,9 +10,12 @@ def biseccion_metodo(f, a, b, tol, max_iter):
     
     if '=' in f:
         return "Error: ingresa la función como expresión, no como ecuación. Ej: 'x-3' en vez de 'x=3'", []
-    
 
     expresion = parse_expr(f, transformations=transformaciones)
+    variables = expresion.free_symbols
+
+    if variables and variables != {x}:
+        return f"Error: usa 'x' como variable. Se encontró: {variables}", []
 
     f = sp.lambdify(x, expresion)
 
@@ -20,13 +23,13 @@ def biseccion_metodo(f, a, b, tol, max_iter):
     c_prev = None
 
     if f(a) * f(b) >= 0:
-        return "f(a)·f(b) debe ser < 0. El intervalo no contiene una raíz."
+        return "f(a)·f(b) debe ser < 0. El intervalo no contiene una raíz.", []
 
 
     fa, fb = f(a), f(b)
 
     if fa * fb >= 0:
-        return "Error: f(a)·f(b) debe ser < 0. Verifique el intervalo."
+        return "Error: f(a)·f(b) debe ser < 0. Verifique el intervalo.", []
 
     resultados = []
 
@@ -34,10 +37,6 @@ def biseccion_metodo(f, a, b, tol, max_iter):
         iteracion += 1
         c = (a + b) / 2.0
         fc = f(c)
-
-        # Stop iteration when the root is found
-        if fc == 0:
-            return f"Raíz exacta encontrada: {c}", resultados
 
         if c_prev is not None:
             error_rel = abs((c - c_prev) / c) if c != 0 else abs(c - c_prev)
@@ -49,6 +48,10 @@ def biseccion_metodo(f, a, b, tol, max_iter):
 
         resultados.append((iteracion, a, b, c, fc, error_rel))
 
+        # Stop iteration when the root is found
+        if fc == 0:
+            return f"Raíz exacta encontrada: {c}", resultados
+        
         if f(a) * fc < 0:
             b = c
         else:
