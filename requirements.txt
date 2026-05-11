@@ -1,3 +1,4 @@
-gradio
+gradio==4.44.1
 numpy
 sympy
+huggingface-hub==0.23.2
