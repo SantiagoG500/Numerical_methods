@@ -1,10 +1,15 @@
 ---
-title: Numerical Methods
-sdk: gradio # o streamlit, o docker
-sdk_version: 4.0.0
+title: Numerical Methods Calculator
+emoji: 🧮
+colorFrom: blue
+colorTo: indigo
+sdk: gradio
+python_version: 3.10  # <--- AÑADE ESTA LÍNEA
+sdk_version: 5.0.0
 app_file: app.py
 pinned: false
 ---
+
 
 
 # Numeric Methods
