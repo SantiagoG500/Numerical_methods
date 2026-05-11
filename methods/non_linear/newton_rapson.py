@@ -9,7 +9,7 @@ def newton_raphson_metodo(fx_str, x0, tolerancia, max_iter):
         # --- PREPARACIÓN SIMBÓLICA ---
         x = sp.symbols('x')
 
-        if '=' in f:
+        if '=' in fx_str:
             return "Error: ingresa la función como expresión, no como ecuación. Ej: 'x-3' en vez de 'x=3'", []
     
 
