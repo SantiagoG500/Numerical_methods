@@ -52,6 +52,7 @@ def gauss_seidel_metodo(n_dimension, a_lista, b_lista, tolerancia, max_iter):
     except (ValueError, TypeError) as e:
         return f"Error en los datos de entrada: {str(e)}", "[]"
 
+    resultados_arr = []
     for k in range(max_iter):
         x_prev = x_gauss.copy()
 
@@ -66,9 +67,12 @@ def gauss_seidel_metodo(n_dimension, a_lista, b_lista, tolerancia, max_iter):
         else:
             err_rel = 1.0
 
+        resultados_formateados = np.array2string(x_gauss, formatter={'float_kind': lambda x: f"{x:.6f}"})
+        resultados_arr.append(( k+1, resultados_formateados, err_rel ))
+
         if err_rel < tolerancia:
             resultados = np.array2string(x_gauss, formatter={'float_kind': lambda x: f"{x:.6f}"})
-            return f"El error relativo ({err_rel:.6f}) es menor a la tolerancia ({tolerancia})", resultados
+            return f"El error relativo ({err_rel:.6f}) es menor a la tolerancia ({tolerancia})", resultados_arr
 
-    resultados = np.array2string(x_gauss, formatter={'float_kind': lambda x: f"{x:.6f}"})
-    return f"Se alcanzó el máximo de iteraciones {max_iter} sin llegar a la tolerancia deseada", resultados
+    # resultados = np.array2string(x_gauss, formatter={'float_kind': lambda x: f"{x:.6f}"})
+    return f"Se alcanzó el máximo de iteraciones {max_iter} sin llegar a la tolerancia deseada", resultados_arr

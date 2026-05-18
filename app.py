@@ -133,7 +133,8 @@ with gr.Blocks(title="Calculadora de métodos numéricos") as demo:
 
         with gr.Column():
             res_output = gr.Textbox(label="Resultados", interactive=False)
-            res_2_output = gr.Textbox(label="Resultados 2", interactive=False)
+            # res_2_output = gr.Textbox(label="Resultados 2", interactive=False)
+            res_2_output = gr.Dataframe(headers=['Iteración', 'Resultados formateados', 'Error relativo'])
 
         gauss_d_input.change(
             fn=update_matrix_inputs,
